@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">TodoManager</string>
+    <string-array name="priority_array">
+        <item>P1</item>
+        <item>P2</item>
+        <item>P3</item>
+        <item>P4</item>
+    </string-array>
+</resources>
