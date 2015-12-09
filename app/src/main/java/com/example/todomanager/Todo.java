@@ -10,6 +10,7 @@ import android.os.Parcelable;
  */
 public class Todo implements Parcelable {
     String title;
+    String notes;
     String dueDate;
     String priority;
 
@@ -23,6 +24,7 @@ public class Todo implements Parcelable {
         public Todo createFromParcel(Parcel source) {
             Todo todo = new Todo();
             todo.title = source.readString();
+            todo.notes = source.readString();
             todo.dueDate = source.readString();
             todo.priority = source.readString();
             return todo;
@@ -37,6 +39,7 @@ public class Todo implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(title);
+        dest.writeString(notes);
         dest.writeString(dueDate);
         dest.writeString(priority);
     }

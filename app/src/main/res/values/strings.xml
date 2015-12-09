@@ -1,9 +1,11 @@
 <resources>
     <string name="app_name">TodoManager</string>
     <string-array name="priority_array">
-        <item>P1</item>
-        <item>P2</item>
-        <item>P3</item>
-        <item>P4</item>
+        <item>Critical</item>
+        <item>Highest</item>
+        <item>High</item>
+        <item>Medium</item>
+        <item>Low</item>
+        <item>Lowest</item>
     </string-array>
 </resources>

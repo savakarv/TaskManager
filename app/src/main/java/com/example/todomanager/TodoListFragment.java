@@ -1,10 +1,13 @@
 package com.example.todomanager;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,22 +51,35 @@ public class TodoListFragment extends Fragment implements AddTodoDelegate {
         updateUI();
     }
 
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == 101 && resultCode == Activity.RESULT_OK) {
-            Todo todo  = data.getParcelableExtra("TODO");
-            todoList.add(todo);
-        }
-    }
-
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmentView =
                 inflater.inflate(R.layout.fragment_todolist, container, false);
         todoListView =
                 (ListView) fragmentView.findViewById(R.id.listView);
+        todoListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(inflater.getContext());
+                builder.setMessage("Are you sure you want delete the Task \"" + todoList.get(position).title + "\"");
+                builder.setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        todoList.remove(position);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+                builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.show();
+                return true;
+            }
+        });
         if(savedInstanceState != null) {
             todoList = savedInstanceState.getParcelableArrayList("TODO");
         }

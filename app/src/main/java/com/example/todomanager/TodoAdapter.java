@@ -62,8 +62,8 @@ public class TodoAdapter extends BaseAdapter {
             mainView = inflater.inflate(R.layout.row, null);
             ViewHolder vh = new ViewHolder();
             vh.titleTV =  (TextView)mainView.findViewById(R.id.textView4);
-            vh.dueDateTV = (TextView) mainView.findViewById(R.id.textView5);
-            vh.priorityTV = (TextView) mainView.findViewById(R.id.textView6);
+            vh.dueDateTV = (TextView) mainView.findViewById(R.id.textView6);
+            vh.priorityTV = (TextView) mainView.findViewById(R.id.textView5);
             mainView.setTag(vh);
 
         } else {

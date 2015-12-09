@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
 
             addFrag.delegate = frag;
             trans.remove(frag);
-            trans.add(R.id.mainLayout, addFrag, "TODOLISTFRAGMENT");
+            trans.add(R.id.mainLayout, addFrag, "ADDTODOFRAGMENT");
             trans.addToBackStack("ADD");
             trans.commit();
         }
