@@ -106,6 +106,7 @@ public class TodoListFragment extends Fragment implements AddTodoDelegate {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getActivity(), TodoDetailActivity.class);
                 intent.putParcelableArrayListExtra("TODO_LIST", todoList);
+                intent.putExtra("SELECTED_TODO", position);
                 startActivityForResult(intent, 100);
             }
         });
