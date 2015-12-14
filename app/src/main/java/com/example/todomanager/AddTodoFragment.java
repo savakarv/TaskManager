@@ -1,11 +1,14 @@
 package com.example.todomanager;
 
+import android.app.ActionBar;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -32,6 +35,7 @@ public class AddTodoFragment extends Fragment {
     private DatePickerDialog datePickerDialog;
     DatePickerDialog.OnDateSetListener pickerListener;
     Spinner priority;
+    ActionBar actionBar;
 
     public AddTodoFragment() {
 
@@ -42,6 +46,7 @@ public class AddTodoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View fragmentView = inflater.inflate(R.layout.fragment_add_todo, container, false);
+
         title = (EditText) fragmentView.findViewById(R.id.editText);
         dueDate = (EditText) fragmentView.findViewById(R.id.editText2);
         notes = (EditText) fragmentView.findViewById(R.id.editText3);

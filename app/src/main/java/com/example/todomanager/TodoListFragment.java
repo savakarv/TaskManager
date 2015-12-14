@@ -8,14 +8,22 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RadioGroup;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Created by rathish.kannan on 12/8/15.
@@ -26,6 +34,8 @@ public class TodoListFragment extends Fragment implements AddTodoDelegate {
     ArrayList<Todo> todoList = new ArrayList<Todo>();
     TodoAdapter adapter;
     int selected_item = -1;
+    int checked_item = -1;
+    Context context;
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
@@ -85,12 +95,99 @@ public class TodoListFragment extends Fragment implements AddTodoDelegate {
         builder.show();
     }
 
+    public void sortDialog(Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Sort By");
+        final View view = LayoutInflater.from(context).inflate(R.layout.list_dialog, null, false);
+        RadioGroup radioGroup = (RadioGroup) view.findViewById(R.id.radiogroup);
+        if(checked_item >= 0 ) {
+            radioGroup.check(checked_item);
+        }
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                RadioGroup radioGroup = (RadioGroup) view.findViewById(R.id.radiogroup);
+                int checkedRadioButton = radioGroup.getCheckedRadioButtonId();
+                checked_item = checkedRadioButton;
+                switch (checkedRadioButton) {
+                    case R.id.sort_title_asc:
+                        Collections.sort(todoList, new Comparator<Todo>() {
+                            public int compare(Todo todo1, Todo todo2) {
+                                return todo1.title.compareToIgnoreCase(todo2.title);
+                            }
+                        });
+                        adapter.notifyDataSetChanged();
+                        break;
+                    case R.id.sort_title_desc:
+                        Collections.sort(todoList, Collections.reverseOrder(new Comparator<Todo>() {
+                            public int compare(Todo todo1, Todo todo2) {
+                                return todo1.title.compareToIgnoreCase(todo2.title);
+                            }
+                        }));
+                        adapter.notifyDataSetChanged();
+                        break;
+                    case R.id.sort_prior_asc:
+                        Collections.sort(todoList, new Comparator<Todo>() {
+                            public int compare(Todo todo1, Todo todo2) {
+                                return todo1.priority.compareToIgnoreCase(todo2.priority);
+                            }
+                        });
+                        adapter.notifyDataSetChanged();
+                        break;
+                    case R.id.sort_prior_desc:
+                        Collections.sort(todoList, Collections.reverseOrder(new Comparator<Todo>() {
+                            public int compare(Todo todo1, Todo todo2) {
+                                return todo1.priority.compareToIgnoreCase(todo2.priority);
+                            }
+                        }));
+                        adapter.notifyDataSetChanged();
+                        break;
+                }
+            }
+        });
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                checked_item = -1;
+                dialog.cancel();
+            }
+        });
+        builder.setView(view);
+        builder.show();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main_activity_bar, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.i("Test", "Item id: " + item.getItemId());
+        switch (item.getItemId()) {
+            case R.id.action_sort:
+                sortDialog(context);
+                break;
+        }
+        return true;
+
+    }
+
+
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View fragmentView =
                 inflater.inflate(R.layout.fragment_todolist, container, false);
+        context = inflater.getContext();
         todoListView =
                 (ListView) fragmentView.findViewById(R.id.listView);
         todoListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -115,6 +212,9 @@ public class TodoListFragment extends Fragment implements AddTodoDelegate {
             selected_item = savedInstanceState.getInt("SELECTED_ITEM");
             if(selected_item > -1) {
                 createDialog(inflater.getContext(), selected_item);
+            }
+            if(checked_item > -1) {
+                sortDialog(inflater.getContext());
             }
         }
         adapter = new TodoAdapter(getContext(), todoList);
