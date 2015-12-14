@@ -27,5 +27,15 @@
             android:text="Sort Priority Desc"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" />
+        <RadioButton
+            android:id="@+id/sort_due_asc"
+            android:text="Sort Due Date Asc"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
+        <RadioButton
+            android:id="@+id/sort_due_desc"
+            android:text="Sort Due Date Desc"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" />
     </RadioGroup>
 </LinearLayout>

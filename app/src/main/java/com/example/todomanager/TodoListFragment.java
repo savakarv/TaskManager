@@ -21,9 +21,11 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 
 /**
  * Created by rathish.kannan on 12/8/15.
@@ -142,6 +144,38 @@ public class TodoListFragment extends Fragment implements AddTodoDelegate {
                         }));
                         adapter.notifyDataSetChanged();
                         break;
+                    case R.id.sort_due_asc:
+                        Collections.sort(todoList, new Comparator<Todo>() {
+                            public int compare(Todo todo1, Todo todo2) {
+                                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+                                try {
+                                    Date date1 = dateFormat.parse(todo1.dueDate);
+                                    Date date2 = dateFormat.parse(todo2.dueDate);
+                                    return date1.compareTo(date2);
+                                } catch (Exception e) {
+
+                                }
+                                return -1;
+                            }
+                        });
+                        adapter.notifyDataSetChanged();
+                        break;
+                    case R.id.sort_due_desc:
+                        Collections.sort(todoList, Collections.reverseOrder(new Comparator<Todo>() {
+                            public int compare(Todo todo1, Todo todo2) {
+                                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+                                try {
+                                    Date date1 = dateFormat.parse(todo1.dueDate);
+                                    Date date2 = dateFormat.parse(todo2.dueDate);
+                                    return date1.compareTo(date2);
+                                } catch (Exception e) {
+
+                                }
+                                return -1;
+                            }
+                        }));
+                        adapter.notifyDataSetChanged();
+                        break;
                 }
             }
         });
@@ -170,7 +204,6 @@ public class TodoListFragment extends Fragment implements AddTodoDelegate {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.i("Test", "Item id: " + item.getItemId());
         switch (item.getItemId()) {
             case R.id.action_sort:
                 sortDialog(context);

@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -35,7 +36,7 @@ public class AddTodoFragment extends Fragment {
     private DatePickerDialog datePickerDialog;
     DatePickerDialog.OnDateSetListener pickerListener;
     Spinner priority;
-    ActionBar actionBar;
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
     public AddTodoFragment() {
 
@@ -54,13 +55,13 @@ public class AddTodoFragment extends Fragment {
 
         //Date Picker for Due Date
         Calendar newCalendar = Calendar.getInstance();
-        dueDate.setText(new StringBuilder().append(newCalendar.get(Calendar.DAY_OF_MONTH)).append("-").append(newCalendar.get(Calendar.MONTH)+1).append("-").append(newCalendar.get(Calendar.YEAR)));
+        dueDate.setText(dateFormat.format(newCalendar.getTime()));
         pickerListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int day) {
                 Calendar newDate = Calendar.getInstance();
                 newDate.set(year, month, day);
-                dueDate.setText(new StringBuilder().append(day).append("-").append(month+1).append("-").append(year));
+                dueDate.setText(dateFormat.format(newDate.getTime()));
             }
         };
         datePickerDialog = new DatePickerDialog(inflater.getContext(), pickerListener, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
