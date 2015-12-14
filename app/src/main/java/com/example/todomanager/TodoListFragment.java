@@ -1,5 +1,6 @@
 package com.example.todomanager;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -51,6 +52,18 @@ public class TodoListFragment extends Fragment implements AddTodoDelegate {
         updateUI();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == 100 && resultCode == Activity.RESULT_OK) {
+            int item_position = data.getIntExtra("TODO_DELETE_ITEM", -1);
+            Todo todo_resp = data.getParcelableExtra("TODO_LIST_VAL");
+            if(todo_resp == null && item_position > -1) {
+                todoList.remove(item_position);
+                adapter.notifyDataSetChanged();
+            }
+        }
+    }
+
     public void createDialog(Context context, final int position) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setMessage("Are you sure you want delete the Task \"" + todoList.get(position).title + "\"");
@@ -93,7 +106,8 @@ public class TodoListFragment extends Fragment implements AddTodoDelegate {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(getActivity(), TodoDetailActivity.class);
                 intent.putParcelableArrayListExtra("TODO_LIST", todoList);
-                startActivity(intent);
+                intent.putExtra("SELECTED_TODO", position);
+                startActivityForResult(intent, 100);
             }
         });
         if(savedInstanceState != null) {

@@ -1,7 +1,9 @@
 package com.example.todomanager;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -31,6 +33,7 @@ public class TodoDetailFragment extends Fragment {
     TextView dueDate;
     TextView priority;
     TextView notes;
+    boolean is_delete=false;
 
     public TodoDetailFragment() {
 
@@ -41,6 +44,7 @@ public class TodoDetailFragment extends Fragment {
         super.onSaveInstanceState(outState);
         outState.putParcelable("TODO_ITEM", todo);
         outState.putInt("SELECTED_ITEM", selected_item);
+        outState.putBoolean("IS_DELETE", is_delete);
     }
 
     private void updateUI() {
@@ -59,12 +63,20 @@ public class TodoDetailFragment extends Fragment {
         builder.setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
+                is_delete = false;
+                Todo null_todo = null;
+                Intent intent = new Intent(getActivity(), MainActivity.class);
+                intent.putExtra("TODO_DELETE_ITEM", selected_item);
+                intent.putExtra("TODO_LIST_VAL", null_todo);
+                getActivity().setResult(Activity.RESULT_OK, intent);
+                TodoDetailActivity todoDetailActivity = (TodoDetailActivity)getActivity();
+                todoDetailActivity.finish();
             }
         });
         builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                is_delete = false;
                 dialog.cancel();
             }
         });
@@ -73,7 +85,7 @@ public class TodoDetailFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View fragmentView =
                 inflater.inflate(R.layout.fragment_todo_detail, container, false);
         title = (TextView) fragmentView.findViewById(R.id.textView9);
@@ -83,7 +95,8 @@ public class TodoDetailFragment extends Fragment {
         if(savedInstanceState != null) {
             todo = savedInstanceState.getParcelable("TODO_ITEM");
             selected_item = savedInstanceState.getInt("SELECTED_ITEM");
-            if(selected_item > -1) {
+            is_delete = savedInstanceState.getBoolean("IS_DELETE");
+            if(is_delete) {
                 createDialog(inflater.getContext());
             }
         }
@@ -106,7 +119,8 @@ public class TodoDetailFragment extends Fragment {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                is_delete = true;
+                createDialog(inflater.getContext());
             }
         });
         Bundle args = getArguments();

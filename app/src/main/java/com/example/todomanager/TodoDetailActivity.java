@@ -13,6 +13,7 @@ public class TodoDetailActivity extends AppCompatActivity {
     ViewPager viewPager;
     FragmentStatePagerAdapter adapter;
     ArrayList<Todo> todoArray;
+    int selected_item = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +21,7 @@ public class TodoDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_todo_detail);
         Intent launchingIntent = getIntent();
         todoArray  = launchingIntent.getParcelableArrayListExtra("TODO_LIST");
+        selected_item = launchingIntent.getIntExtra("SELECTED_TODO", 0);
         viewPager = (ViewPager) findViewById(R.id.viewPager);
         adapter = new FragmentStatePagerAdapter(getSupportFragmentManager()) {
             @Override
@@ -39,5 +41,6 @@ public class TodoDetailActivity extends AppCompatActivity {
             }
         };
         viewPager.setAdapter(adapter);
+        viewPager.setCurrentItem(selected_item);
     }
 }
