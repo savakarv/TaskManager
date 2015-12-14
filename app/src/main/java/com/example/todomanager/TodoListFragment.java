@@ -44,6 +44,7 @@ public class TodoListFragment extends Fragment implements AddTodoDelegate {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList("TODO", todoList);
         outState.putInt("SELECTED_ITEM", selected_item);
+        outState.putInt("CHECKED_ITEM", checked_item);
     }
 
     public TodoListFragment() {
@@ -105,12 +106,18 @@ public class TodoListFragment extends Fragment implements AddTodoDelegate {
         if(checked_item >= 0 ) {
             radioGroup.check(checked_item);
         }
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                checked_item = group.getCheckedRadioButtonId();
+            }
+        });
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 RadioGroup radioGroup = (RadioGroup) view.findViewById(R.id.radiogroup);
                 int checkedRadioButton = radioGroup.getCheckedRadioButtonId();
-                checked_item = checkedRadioButton;
+                checked_item = -1;
                 switch (checkedRadioButton) {
                     case R.id.sort_title_asc:
                         Collections.sort(todoList, new Comparator<Todo>() {
@@ -243,6 +250,7 @@ public class TodoListFragment extends Fragment implements AddTodoDelegate {
         if(savedInstanceState != null) {
             todoList = savedInstanceState.getParcelableArrayList("TODO");
             selected_item = savedInstanceState.getInt("SELECTED_ITEM");
+            checked_item = savedInstanceState.getInt("CHECKED_ITEM");
             if(selected_item > -1) {
                 createDialog(inflater.getContext(), selected_item);
             }
