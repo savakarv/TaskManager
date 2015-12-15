@@ -61,7 +61,7 @@ public class TodoDetailFragment extends Fragment {
 
     public void createDialog(Context context) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setMessage("Are you sure you want delete the Task \"" + todo.title + "\"");
+        builder.setMessage("Are you sure you want delete the Task \"" + todo.getTitle() + "\"");
         builder.setPositiveButton("DELETE", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -129,10 +129,10 @@ public class TodoDetailFragment extends Fragment {
         Bundle args = getArguments();
         todo = args.getParcelable("TODO");
         selected_item = args.getInt("TODO_SELECTED_ITEM");
-        title.setText(todo.title);
-        dueDate.setText(todo.dueDate);
-        priority.setText(todo.priority);
-        notes.setText(todo.notes);
+        title.setText(todo.getTitle());
+        dueDate.setText(todo.getDueDate());
+        priority.setText(todo.getPriority());
+        notes.setText(todo.getNotes());
         return fragmentView;
     }
 }

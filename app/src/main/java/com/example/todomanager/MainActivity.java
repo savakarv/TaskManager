@@ -10,6 +10,19 @@ import android.view.MenuInflater;
 
 public class MainActivity extends AppCompatActivity {
 
+    private void loadRecycleBin() {
+        FragmentManager manager = getSupportFragmentManager();
+
+        RecycleBinFragment frag =
+                (RecycleBinFragment) manager.findFragmentByTag("RECYCLEBINFRAGMENT");
+        if(frag == null) {
+            frag = new RecycleBinFragment();
+            FragmentTransaction trans = manager.beginTransaction();
+            trans.add(R.id.mainLayout, frag, "RECYCLEBINFRAGMENT");
+            trans.commit();
+        }
+    }
+
     private void loadListFragment() {
         FragmentManager manager = getSupportFragmentManager();
 

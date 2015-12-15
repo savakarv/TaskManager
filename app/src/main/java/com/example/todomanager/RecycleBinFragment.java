@@ -10,8 +10,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,10 +33,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 
-/**
- * Created by rathish.kannan on 12/8/15.
- */
-public class TodoListFragment extends Fragment implements AddTodoDelegate {
+public class RecycleBinFragment extends Fragment {
     Button addButton;
     ListView todoListView;
     ArrayList<Todo> todoList = new ArrayList<Todo>();
@@ -56,7 +51,7 @@ public class TodoListFragment extends Fragment implements AddTodoDelegate {
         outState.putInt("CHECKED_ITEM", checked_item);
     }
 
-    public TodoListFragment() {
+    public RecycleBinFragment() {
         Todo todo = new Todo();
     }
 
@@ -77,7 +72,7 @@ public class TodoListFragment extends Fragment implements AddTodoDelegate {
 
     private void updateUI() {
         try {
-            todoList = dbhelper.getTaskList();
+            todoList = dbhelper.getDeletedTaskList();
 
             adapter = new TodoAdapter(getContext(), todoList);
             todoListView.setAdapter(adapter);
@@ -246,13 +241,6 @@ public class TodoListFragment extends Fragment implements AddTodoDelegate {
             case R.id.action_sort:
                 sortDialog(context);
                 break;
-            case R.id.action_bin:
-                Fragment fragment = new RecycleBinFragment();
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.mainLayout, fragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
         }
         return true;
 
@@ -265,12 +253,12 @@ public class TodoListFragment extends Fragment implements AddTodoDelegate {
         super.onCreate(savedInstanceState);
 
         View fragmentView =
-                inflater.inflate(R.layout.fragment_todolist, container, false);
+                inflater.inflate(R.layout.fragment_recycle_bin, container, false);
         context = inflater.getContext();
         dbhelper = new TaskDBHelper(context);
 
         todoListView =
-                (ListView) fragmentView.findViewById(R.id.listView);
+                (ListView) fragmentView.findViewById(R.id.recyclelist);
         todoListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -302,14 +290,7 @@ public class TodoListFragment extends Fragment implements AddTodoDelegate {
         }
         adapter = new TodoAdapter(getContext(), todoList);
         todoListView.setAdapter(adapter);
-        addButton = (Button) fragmentView.findViewById(R.id.button);
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MainActivity ma = (MainActivity)getActivity();
-                ma.switchToAddFragment();
-            }
-        });
+
         return fragmentView;
     }
 }

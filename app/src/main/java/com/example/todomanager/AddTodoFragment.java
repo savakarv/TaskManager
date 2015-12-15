@@ -81,10 +81,11 @@ public class AddTodoFragment extends Fragment {
                 String todoNotes = notes.getText().toString();
                 String todoPriority = priority.getSelectedItem().toString();
                 Todo todo = new Todo();
-                todo.title = todoTitle;
-                todo.notes = todoNotes;
-                todo.dueDate = todoDueDate;
-                todo.priority = todoPriority;
+                todo.setTitle(todoTitle);
+                todo.setNotes(todoNotes);
+                todo.setDueDate(todoDueDate);
+                todo.setPriority(todoPriority);
+                todo.setDeleted("N");
                 if(delegate != null) {
                     delegate.addTodo(todo);
                 }

@@ -71,9 +71,9 @@ public class TodoAdapter extends BaseAdapter {
         }
         Todo todo = todos.get(position);
         ViewHolder vh = (ViewHolder)mainView.getTag();
-        vh.titleTV.setText(todo.title);
-        vh.dueDateTV.setText(todo.dueDate);
-        vh.priorityTV.setText(todo.priority);
+        vh.titleTV.setText(todo.getTitle());
+        vh.dueDateTV.setText(todo.getDueDate());
+        vh.priorityTV.setText(todo.getPriority());
         return mainView;
     }
 }
